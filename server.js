@@ -1,12 +1,13 @@
 const express = require("express");
 const app = express();
-//const db = require("db");
+const db = require("./db.js");
 const hb = require("express-handlebars");
 //HERE: const render_data = require("./data.json")
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
+//do i have to use body-parser?
 app.use(express.urlencoded({extended: false}));
 app.use(express.static("./public"));
 
@@ -18,7 +19,8 @@ app.get("/", (req,res) => {
 app.get("/petition", (req,res) => {
     res.render("petition", {
         layout: null,
-    })
+    });
+    console.log("request body in get", req.body)
 });
 
 app.get("/petition/signed", (req,res) => {
@@ -34,6 +36,9 @@ app.get("/petition/signers", (req,res) => {
 });
 
 app.post("/petition", (req,res) => {
+    console.log("req body in post ", req.body);
+    console.log("req param", req.param);
+    //db.insertUserInput
     
 })
 

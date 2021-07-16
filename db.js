@@ -1,7 +1,7 @@
 const spicedPg = require("spiced-pg");
-const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition_database_name") //returns an object
+const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition") //returns an object
 
 //talking to the database
-module.exports.getCities = () => {
-    return db.query(`SELECT * FROM cities`)
+module.exports.insertUserInput = () => {
+    `INSERT INTO signatures ($1, $2, $3, $4) VALUES (req.body.somthing)`;
 }
