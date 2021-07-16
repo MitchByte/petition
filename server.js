@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const db = require("./db.js");
 const hb = require("express-handlebars");
-//HERE: const render_data = require("./data.json")
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
@@ -45,8 +44,19 @@ app.post("/petition", (req,res) => {
     console.log("req.body.firstname", req.body.firstname);
     console.log("req.body.firstname", req.body.lastname);
     console.log("req.body.canvas", req.body.canvas);
-    //console.log("req param", req.param);
-    db.insertUserInput(req.body.firstname,req.body.lastname, req.body.canvas)
+    db.insertUserInput(req.body.firstname,req.body.lastname, req.body.canvas = 1) 
+    .then(() => {
+        res.redirect("/petition/signed")
+    })
+    .catch((err) => {
+        res.render("petition", {
+            layout:null,
+            error:"error is true"
+
+        })
+        console.log("error in insertUserInput: ", err)
+     })
+    
     
 })
 
