@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const db = require("./db.js");
 const hb = require("express-handlebars");
+const { signCanvas } = require("./public/script.js");
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
@@ -11,10 +12,11 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.static("./public"));
 
 
-
 app.get("/", (req,res) => {
+    res.redirect("/petition")
     console.log("get request to / route happend")
 });
+
 app.get("/petition", (req,res) => {
     res.render("petition", {
         layout: null,
@@ -52,7 +54,6 @@ app.post("/petition", (req,res) => {
         res.render("petition", {
             layout:null,
             error:"error is true"
-
         })
         console.log("error in insertUserInput: ", err)
      })
