@@ -35,10 +35,18 @@ app.get("/petition/signers", (req,res) => {
     })
 });
 
+app.get("/logout", (req,res) => {
+    //req.session = null;
+    res.redirect("/")
+})
+
 app.post("/petition", (req,res) => {
     console.log("req body in post ", req.body);
-    console.log("req param", req.param);
-    //db.insertUserInput
+    console.log("req.body.firstname", req.body.firstname);
+    console.log("req.body.firstname", req.body.lastname);
+    console.log("req.body.canvas", req.body.canvas);
+    //console.log("req param", req.param);
+    db.insertUserInput(req.body.firstname,req.body.lastname, req.body.canvas)
     
 })
 
