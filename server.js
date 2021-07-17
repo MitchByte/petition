@@ -12,8 +12,11 @@ app.set("view engine", "handlebars");
 app.use(express.urlencoded({extended: false}));
 
 app.use(cookieParser());
-app.use((req,res,next)=> {
-    //console.log("middleware in use urel", req.url);
+app.use((req,res,next) => {
+    console.log("-----------------------------------------------------")
+    console.log("cookies", req.cookies);
+    console.log("cookies in /petition/thanks: ",req.cookies.signed);
+    console.log("req.cookies.signed: !",  !req.cookies.signed);
     next();
 })
 
@@ -30,41 +33,53 @@ app.get("/petition", (req,res) => {
     });
 });
 
+
 app.get("/petition/thanks", (req,res) => {
-    db.getTotalNumber()
-    .then((result) => {
-        //console.log("number", result.rows[0].count);
-        let num = result.rows[0].count;
-        res.render("thanks", {
-        layout:"main",
-        number: num,
+    if (req.cookies.signed) {
+        db.getTotalNumber()
+        .then((result) => {
+            //console.log("number", result.rows[0].count);
+            let num = result.rows[0].count;
+            res.render("thanks", {
+            layout:"main",
+            number: num,
+            });
+        })
+        .catch((err) => {
+            console.log("error in GET/petition/thanks getTotalnumber ", err);
         });
-    })
-    .catch((err) => {
-        console.log("error in GET/petition/thanks getTotalnumber ", err);
-    });
+    } else {
+        res.redirect("/petition")
+    }
+    
 });
 
-app.get("/petition/signers", (req,res) => {
-    db.getSigners()
-    .then((result) => {
-        //console.log("signers", result.rows);
-        let signers = result.rows;
-        res.render("signers", {
-        layout:"main",
-        signers,
-    });
 
-    })
-    .catch((err) => {
-        console.log("error in GET/petition/signers getSigners ", err);
-    })    
+app.get("/petition/signers", (req,res) => {
+    if (req.cookies.signed) {
+        db.getSigners()
+        .then((result) => {
+            //console.log("signers", result.rows);
+            let signers = result.rows;
+            res.render("signers", {
+            layout:"main",
+            signers,
+            });
+        })
+        .catch((err) => {
+            console.log("error in GET/petition/signers getSigners ", err);
+        }); 
+            
+    } else {
+        res.redirect("/petition")
+    }
+       
 });
 
 app.get("/logout", (req,res) => {
     //req.session = null;
     res.redirect("/petition");
-})
+});
 
 app.post("/petition", (req,res) => {
     //console.log("req.body.firstname", req.body.firstname);
@@ -81,9 +96,8 @@ app.post("/petition", (req,res) => {
             error:"Sorry something went wrong. Please try again!"
         });
         console.log("error in POST/petition : insertUserInput: ", err)
-     })
-    
-    
+     });
+      
 })
 
 
