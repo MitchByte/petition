@@ -44,8 +44,8 @@ app.post("/petition", (req,res) => {
     console.log("req body in post ", req.body);
     console.log("req.body.firstname", req.body.firstname);
     console.log("req.body.firstname", req.body.lastname);
-    console.log("req.body.canvas", req.body.canvas);
-    db.insertUserInput(req.body.firstname,req.body.lastname, req.body.canvas = 1) 
+    console.log("req.body.hiddenfield", req.body.hiddenFieldforUrl);
+    db.insertUserInput(req.body.firstname,req.body.lastname, req.body.hiddenFieldforUrl) 
     .then(() => {
         res.redirect("/petition/thanks")
     })
