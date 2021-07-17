@@ -1,8 +1,7 @@
 const express = require("express");
 const app = express();
-const db = require("./db.js");
+const db = require("./db");
 const hb = require("express-handlebars");
-const { signCanvas } = require("./public/script.js");
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
@@ -19,20 +18,20 @@ app.get("/", (req,res) => {
 
 app.get("/petition", (req,res) => {
     res.render("petition", {
-        layout: null,
+        layout: "main",
     });
     console.log("request body in get", req.body)
 });
 
-app.get("/petition/signed", (req,res) => {
+app.get("/petition/thanks", (req,res) => {
     res.render("thanks", {
-        layout:null,
+        layout:"main",
     })
 });
 
 app.get("/petition/signers", (req,res) => {
     res.render("signers", {
-        layout:null,
+        layout:"main",
     })
 });
 
@@ -48,11 +47,11 @@ app.post("/petition", (req,res) => {
     console.log("req.body.canvas", req.body.canvas);
     db.insertUserInput(req.body.firstname,req.body.lastname, req.body.canvas = 1) 
     .then(() => {
-        res.redirect("/petition/signed")
+        res.redirect("/petition/thanks")
     })
     .catch((err) => {
         res.render("petition", {
-            layout:null,
+            layout:"main",
             error:"error is true"
         })
         console.log("error in insertUserInput: ", err)
@@ -60,7 +59,6 @@ app.post("/petition", (req,res) => {
     
     
 })
-
 
 
 app.listen(8080, () => {
