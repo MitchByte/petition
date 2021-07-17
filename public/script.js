@@ -1,32 +1,38 @@
-  (function () {
-    console.log("script.js is working");
-    
-    var canvas = $("#canvas").get(0).getContext("2d");
-    var url = $("#hiddenFieldforUrl").get(0);
+(function () {
 
-    /*function mousePosition() {
-        canvas.on("mousemove", (e) => {
-            let mousePosition = {
-                x: e.pageX,
-                y: e.pageY
-            };
-            return mousePosition;
-        })  
+    console.log("script.js is working");
+
+    //id = canvas
+    var canvas = $('#canvas');
+    var ctx = document.getElementById('canvas').getContext('2d');
+
+    var pos = { x: 0, y: 0 };
+    var canvasOffset=$("#canvas").offset();
+    var offsetX = canvasOffset.left;
+    var offsetY = canvasOffset.top;
+
+    function setPosition(e) {
+        pos.x= parseInt(e.clientX-offsetX);
+        pos.y = parseInt(e.clientY-offsetY);
     }
 
-    let mouseInterval = setInterval(mousePosition,500);
+    canvas.on('mousedown', setPosition);
+    //canvas.on('mouseenter', setPosition);
+    canvas.on('mousemove', (e) => {
+        if (e.buttons !== 1) {
+            return;
+        }
+        ctx.beginPath(); 
 
-    canvas.on("mousedown", (e) => {
-        mousePosition();
-        console.log("mouse position", mousePosition())
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = 'black';
 
-        canvas.beginPath();
-        canvas.strokeStyle = "black";
-        canvas.lineWidth = 3;
-        console.log("mouseinterval", mouseInterval)
-
-    })
-    */
+        ctx.moveTo(pos.x, pos.y);
+        setPosition(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    });
 
 })(); 
     
