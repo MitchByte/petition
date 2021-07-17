@@ -4,5 +4,5 @@ CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,
     firstname VARCHAR NOT NULL CHECK (firstname != ''),
     lastname VARCHAR NOT NULL CHECK (lastname != ''),
-    signature VARCHAR NOT NULL CHECK (signature != '')
+    signa VARCHAR NOT NULL CHECK (signa != '')
 );

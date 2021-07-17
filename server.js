@@ -2,27 +2,32 @@ const express = require("express");
 const app = express();
 const db = require("./db");
 const hb = require("express-handlebars");
-const cookieParser = require('cookie-parser')
+const cookieSession = require('cookie-session');
+
 
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
-//do i have to use body-parser?
+//MIDDLEWARE
 app.use(express.urlencoded({extended: false}));
+app.use(cookieSession({
+    secret: `set second cookie`,
+    maxAge: 1000 * 60 * 60 * 24 * 14
+}));
 
-app.use(cookieParser());
+/* DONT KNOW IF USEFULL
 app.use((req,res,next) => {
-    console.log("-----------------------------------------------------")
-    console.log("cookies", req.cookies);
-    console.log("cookies in /petition/thanks: ",req.cookies.signed);
-    console.log("req.cookies.signed: !",  !req.cookies.signed);
+    console.log("-------------");
+    console.log("req.session",req.session);
+    console.log("req.session signature id", req.session.sigId);
     next();
 })
+*/
 
 app.use(express.static("./public"));
 
-
+//GET
 app.get("/", (req,res) => {
     res.redirect("/petition");
 });
@@ -35,28 +40,46 @@ app.get("/petition", (req,res) => {
 
 
 app.get("/petition/thanks", (req,res) => {
-    if (req.cookies.signed) {
-        db.getTotalNumber()
+    console.log("req.sesson in thanks", req.session);
+    if (req.session.sigId) {
+        var signaUrl = db.getSignature(req.session.sigId)
         .then((result) => {
-            //console.log("number", result.rows[0].count);
-            let num = result.rows[0].count;
-            res.render("thanks", {
-            layout:"main",
-            number: num,
-            });
+            return result.rows[0].signa;
         })
         .catch((err) => {
-            console.log("error in GET/petition/thanks getTotalnumber ", err);
+            console.log("error in GET/petition/thanks : getSignature ", err);
         });
+
+        var total = db.getTotalNumber()
+        .then((result) => {
+            return result.rows[0].count;
+        })
+        .catch((err) => {
+            console.log("error in GET/petition/thanks : getTotalnumber ", err);
+        });
+
+        Promise.all([signaUrl,total])
+            .then((results) => {
+                var signature = results[0];
+                var number = results[1];
+                res.render("thanks",{
+                    layout:"main",
+                    signature,
+                    number,
+                })
+            })
+            .catch((err) => {
+                console.log("error in promise all")
+            })
+            
     } else {
-        res.redirect("/petition")
-    }
-    
+        res.redirect("/petition");
+    }    
 });
 
 
 app.get("/petition/signers", (req,res) => {
-    if (req.cookies.signed) {
+    if (req.session.sigId) {
         db.getSigners()
         .then((result) => {
             //console.log("signers", result.rows);
@@ -67,27 +90,26 @@ app.get("/petition/signers", (req,res) => {
             });
         })
         .catch((err) => {
-            console.log("error in GET/petition/signers getSigners ", err);
+            console.log("error in GET/petition/signers : getSigners ", err);
         }); 
-            
     } else {
-        res.redirect("/petition")
-    }
-       
+        res.redirect("/petition");
+    }       
 });
 
 app.get("/logout", (req,res) => {
-    //req.session = null;
+    req.session = null;
     res.redirect("/petition");
 });
 
+
+
+//POST 
 app.post("/petition", (req,res) => {
-    //console.log("req.body.firstname", req.body.firstname);
-    //console.log("req.body.firstname", req.body.lastname);
-    //console.log("req.body.hiddenfield", req.body.hiddenFieldforUrl);
     db.insertUserInput(req.body.firstname,req.body.lastname, req.body.hiddenFieldforUrl) 
-    .then(() => {
-        res.cookie("signed",true);
+    .then((result) => {
+        console.log("Returning result.rows[0].id in POST:", result.rows[0].id)
+        req.session.sigId = result.rows[0].id;
         res.redirect("/petition/thanks");
     })
     .catch((err) => {
@@ -101,6 +123,8 @@ app.post("/petition", (req,res) => {
 })
 
 
+
+//LISTEN
 app.listen(8080, () => {
     console.log("  SERVER IS LISTENING  ")
 } )
