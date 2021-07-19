@@ -7,7 +7,7 @@ CREATE TABLE users(
     lastname VARCHAR NOT NULL CHECK (lastname != ''),
     email VARCHAR UNIQUE NOT NULL CHECK (email != ''),
     hashedpassword VARCHAR NOT NULL CHECK (hashedpassword != '')
- );
+);
 
 CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,

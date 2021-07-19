@@ -8,20 +8,15 @@ module.exports.userRegister = (first, last, email, hashedpw) => {
 }
 
 //SELECT to find all the data for a user in the users table by their email address.
-module.exports.userLogin = (email) => {
-    return db.query(`SELECT * FROM users WHERE email = ${email}`)
+module.exports.userLogin = (mail) => {
+    return db.query(`SELECT * FROM users WHERE email = '${mail}'`)
 }
 
-//needs to be 
 module.exports.insertUserSignature = (first, last, sign, userid) => {
     return db.query(`INSERT INTO signatures (firstname, lastname, signa, userid) VALUES ($1, $2, $3, $4) RETURNING id`,
                     [first, last, sign, userid])
                 }
-/*
-module.exports.insertUserSignature = (sign, userid) => {
-    return db.query(`INSERT INTO signatures (signa, userid) VALUES ($1, $2) RETURNING id`,
-                    [sign, userid])         
-}*/
+
 
 module.exports.getTotalNumber = () => {
     return db.query(`SELECT COUNT(*) FROM signatures`)

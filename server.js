@@ -3,8 +3,7 @@ const app = express();
 const db = require("./db");
 const hb = require("express-handlebars");
 const cookieSession = require('cookie-session');
-const bycript = require("./bcrypt")
-
+const bcrypt = require("./bcrypt")
 
 
 app.engine("handlebars", hb());
@@ -16,8 +15,6 @@ app.use(cookieSession({
     secret: `set second cookie`,
     maxAge: 1000 * 60 * 60 * 24 * 14
 }));
-
-
 app.use(express.static("./public"));
 
 
@@ -27,14 +24,13 @@ app.get("/", (req,res) => {
 });
 
 app.get("/register", (req,res) => {
-    console.log("req session userid: ",req.session.userid);
     res.render("register", {
         layout:"main",
     })
 });
 
 app.get("/login", (req,res) => {
-    console.log("req session userid: before login ",req.session.userid);
+    console.log("req session in GET login",req.session);
     res.render("login", {
         layout:"main"
     })
@@ -91,7 +87,7 @@ app.get("/petition/signers", (req,res) => {
     if (req.session.sigId) {
         db.getSigners()
         .then((result) => {
-            console.log("signers", result);
+            console.log("signers: ", result.rows);
     
             let signers = result.rows;
             res.render("signers", {
@@ -117,16 +113,17 @@ app.get("/logout", (req,res) => {
 //POST 
 app.post("/register", (req,res) => {
     //console.log("req.body: ",req.body.firstname,req.body.lastname,req.body.email, req.body.password);
-    bycript.hash(req.body.password)
+    bcrypt.hash(req.body.password)
     .then((result) => {
         console.log("req.body.firstname,req.body.lastname,req.body.email,hashedPw:  ", req.body.firstname,req.body.lastname,req.body.email,result);
         db.userRegister(req.body.firstname,req.body.lastname,req.body.email,result)
         .then((result) => {
-        console.log("result rows", result.rows);
-        req.session.userid = result.rows[0].id;
-        req.session.firstname = req.body.firstname;
-        req.session.lastname = req.body.lastname;
-        res.redirect("/petition");
+            let user = {firstname:req.body.firstname, lastname:req.body.lastname, userid:result.rows[0].id};
+            req.session = [user];
+            req.session.userid = result.rows[0].id;
+            req.session.firstname = req.body.firstname;
+            req.session.lastname = req.body.lastname;
+            res.redirect("/petition");
         })
         .catch((err) => {
             res.render("register", {
@@ -138,8 +135,57 @@ app.post("/register", (req,res) => {
     })
     .catch((err) => {
         console.log("error in POST/register : hashed Pw ", err);
+        res.render("register", {
+                layout:"main",
+                error: "Something went wrong. Please try again"
+            })
     });
 })
+
+app.post("/login", (req,res) => {
+    console.log("LOGIN : ", req.body.firstname, req.body.lastname)
+    db.userLogin(req.body.email)
+    .then((result) => {
+        let userid = result.rows[0].id
+        bcrypt.compare(req.body.password, result.rows[0].hashedpassword)
+        .then((bool)=> {
+            console.log("BOOL: ", bool);
+            if (!bool) {
+                res.render("login", {
+                layout:"main",
+                error: "Something went wrong. Please try again"
+                })
+            } 
+            req.session.userid = userid;
+            console.log("req.session in POST login", req.session)
+            db.getSignature(userid)
+            .then((result) => {
+                if (result) {
+                    res.redirect("/petition/thanks") 
+                } else {
+                    res.redirect("/petition")
+                }  
+            })
+            .catch((err) => {
+                console.log("could not handle signature search in login",err);
+            });
+        })
+        .catch((err) => {
+            console.log("error in boolean: ", err)  
+        });
+    })
+    .catch((err) => {
+        console.log("error in POST/login", err);
+        res.render("login", {
+                layout:"main",
+                error: "Something went wrong. Please try again",
+            })
+
+    })
+
+})
+
+
 
 app.post("/petition", (req,res) => {
     db.insertUserSignature(req.session.firstname, req.session.lastname, req.body.hiddenFieldforUrl, req.session.userid) 
