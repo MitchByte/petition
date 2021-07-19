@@ -3,6 +3,7 @@ const app = express();
 const db = require("./db");
 const hb = require("express-handlebars");
 const cookieSession = require('cookie-session');
+const bycript = require("./bcrypt")
 
 
 
@@ -16,25 +17,33 @@ app.use(cookieSession({
     maxAge: 1000 * 60 * 60 * 24 * 14
 }));
 
-/* DONT KNOW IF USEFULL
-app.use((req,res,next) => {
-    console.log("-------------");
-    console.log("req.session",req.session);
-    console.log("req.session signature id", req.session.sigId);
-    next();
-})
-*/
 
 app.use(express.static("./public"));
 
+
 //GET
 app.get("/", (req,res) => {
-    res.redirect("/petition");
+    res.redirect("/register");
 });
 
+app.get("/register", (req,res) => {
+    console.log("req session userid: ",req.session.userid);
+    res.render("register", {
+        layout:"main",
+    })
+});
+
+app.get("/login", (req,res) => {
+    console.log("req session userid: before login ",req.session.userid);
+    res.render("login", {
+        layout:"main"
+    })
+})
+
 app.get("/petition", (req,res) => {
+    console.log("req session userid in petition: ",req.session.userid)
     res.render("petition", {
-        layout: "main",
+        layout:"main",
     });
 });
 
@@ -82,7 +91,8 @@ app.get("/petition/signers", (req,res) => {
     if (req.session.sigId) {
         db.getSigners()
         .then((result) => {
-            //console.log("signers", result.rows);
+            console.log("signers", result);
+    
             let signers = result.rows;
             res.render("signers", {
             layout:"main",
@@ -105,8 +115,34 @@ app.get("/logout", (req,res) => {
 
 
 //POST 
+app.post("/register", (req,res) => {
+    //console.log("req.body: ",req.body.firstname,req.body.lastname,req.body.email, req.body.password);
+    bycript.hash(req.body.password)
+    .then((result) => {
+        console.log("req.body.firstname,req.body.lastname,req.body.email,hashedPw:  ", req.body.firstname,req.body.lastname,req.body.email,result);
+        db.userRegister(req.body.firstname,req.body.lastname,req.body.email,result)
+        .then((result) => {
+        console.log("result rows", result.rows);
+        req.session.userid = result.rows[0].id;
+        req.session.firstname = req.body.firstname;
+        req.session.lastname = req.body.lastname;
+        res.redirect("/petition");
+        })
+        .catch((err) => {
+            res.render("register", {
+                layout:"main",
+                error: "Something went wrong. Please try again"
+            })
+            console.log("error in POST/register : userRegister ", err)
+        })
+    })
+    .catch((err) => {
+        console.log("error in POST/register : hashed Pw ", err);
+    });
+})
+
 app.post("/petition", (req,res) => {
-    db.insertUserInput(req.body.firstname,req.body.lastname, req.body.hiddenFieldforUrl) 
+    db.insertUserSignature(req.session.firstname, req.session.lastname, req.body.hiddenFieldforUrl, req.session.userid) 
     .then((result) => {
         console.log("Returning result.rows[0].id in POST:", result.rows[0].id)
         req.session.sigId = result.rows[0].id;
@@ -119,7 +155,7 @@ app.post("/petition", (req,res) => {
         });
         console.log("error in POST/petition : insertUserInput: ", err)
      });
-      
+
 })
 
 
