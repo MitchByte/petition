@@ -24,14 +24,24 @@ module.exports.getTotalNumber = () => {
 }
 
 module.exports.getSigners = () => {
-    return db.query(`SELECT firstname,lastname FROM signatures`)
+    return db.query(`SELECT users.firstname, users.lastname, profiles.age, profiles.city, profiles.homepage
+    FROM users
+    JOIN signatures ON users.id = signatures.userid
+    FULL JOIN profiles ON users.id = profiles.userid`)
 }
 
 module.exports.getSignature = (identifier)  => {
-    return db.query(`SELECT signa FROM signatures WHERE userid = ${identifier}`)
+    return db.query(`SELECT id,signa FROM signatures WHERE userid = ${identifier}`)
 }
 
 module.exports.addProfile = (userid,age,city,homepage) => {
     return db.query(`INSERT INTO profiles (userid,age,city,homepage) VALUES ($1, $2, $3, $4)`,
     [userid,age,city,homepage])
+}
+
+module.exports.getSignersByCity = (city) => {
+    return db.query(`SELECT users.firstname, users.lastname, profiles.age, profiles.homepage 
+    FROM users
+    FULL JOIN profiles ON users.id = profiles.userid
+    WHERE profiles.city = '${city}'`)
 }
