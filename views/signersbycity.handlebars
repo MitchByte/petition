@@ -1,11 +1,10 @@
-<div>
-    <p>All this people support the idea of creative public space!</p>
+<div class="signersbycity">
+    <p>All this people from {{city}} support the idea of creative public space!</p>
     <ul>
         {{#signers}}
             <li>{{firstname}}  
                 {{lastname}}
                 ({{#if age}} {{age}} {{/if}},
-                {{#if city}} <a href="/views/signersbycity.handlebars">{{city}} </a> {{/if}},
                 {{#if homepage}} <a href="{{homepage}}">{{homepage}}</a> {{/if}})
             </li>
         {{/signers}}
@@ -13,4 +12,3 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="/script.js"></script>
 </div>
-   

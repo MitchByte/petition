@@ -43,11 +43,30 @@ app.get("/petition", (req,res) => {
     });
 });
 
+app.get("/profile", (req,res) => {
+    res.render("profile", {
+        layout:"main",
+    })
+});
 
+//WORK TO DO HERE
+
+app.get("/signers/:city" ,(req,res) => {
+    console.log("req parameter", req.params)
+    const city = req.params.city;
+    res.render("signersbycity",{
+        city:city
+    })
+})
+
+//dont know where the problem, get right signature id!!
 app.get("/petition/thanks", (req,res) => {
+    console.log("__________________________________")
+    console.log("THANKS : ", req.body)
     console.log("req.sesson in thanks", req.session);
+
     if (req.session.sigId) {
-        var signaUrl = db.getSignature(req.session.sigId)
+        var signaUrl = db.getSignature(req.session.userid)
         .then((result) => {
             return result.rows[0].signa;
         })
@@ -112,17 +131,20 @@ app.get("/logout", (req,res) => {
 
 //POST 
 app.post("/register", (req,res) => {
-    //console.log("req.body: ",req.body.firstname,req.body.lastname,req.body.email, req.body.password);
+    console.log("__________________________________")
+    console.log("REGISTER: ", req.body)
+    req.session.firstname = req.body.firstname;
+    req.session.lastname = req.body.lastname;
+    req.session.email =req.body.email;
+    console.log("req.body: ",req.body.firstname,req.body.lastname,req.body.email, req.body.password);
     bcrypt.hash(req.body.password)
     .then((result) => {
-        console.log("req.body.firstname,req.body.lastname,req.body.email,hashedPw:  ", req.body.firstname,req.body.lastname,req.body.email,result);
         db.userRegister(req.body.firstname,req.body.lastname,req.body.email,result)
-        .then((result) => {
-            let user = {firstname:req.body.firstname, lastname:req.body.lastname, userid:result.rows[0].id};
-            req.session = [user];
+        .then((result) => {    
+            //returns users(id)  
+            console.log("result rows", result.rows)      
             req.session.userid = result.rows[0].id;
-            req.session.firstname = req.body.firstname;
-            req.session.lastname = req.body.lastname;
+            console.log("req session after register: ", req.session)
             res.redirect("/petition");
         })
         .catch((err) => {
@@ -142,11 +164,35 @@ app.post("/register", (req,res) => {
     });
 })
 
+app.post("/profile", (req,res) => {
+    const {age,city,homepage} = req.body;
+    console.log("age, city, homepage", age, city, homepage);
+    if (!homepage.startsWith("https://")|| !homepage.startsWith("http://")) {
+        res.render("/profile", {
+            layout:"main",
+            error: "Please use a valid URL"
+        })
+    }
+    let userId = req.session.userid;
+    let ageInt = parseInt(age);
+    db.addProfile(userId,ageInt,city,homepage)
+
+})
+
 app.post("/login", (req,res) => {
-    console.log("LOGIN : ", req.body.firstname, req.body.lastname)
+    console.log("__________________________________")
+    console.log("LOGIN : ", req.body)
     db.userLogin(req.body.email)
     .then((result) => {
-        let userid = result.rows[0].id
+        //result is SELECT * FROM users with re.body.email
+        let userid = result.rows[0].id;
+        //here cookie session
+        req.session.firstname = result.rows[0].firstname;
+        req.session.lastname = result.rows[0].lastname;
+        req.session.userid = result.rows[0].id;
+        req.session.email = result.rows[0].email;
+        
+        console.log("result after login:", result.rows)
         bcrypt.compare(req.body.password, result.rows[0].hashedpassword)
         .then((bool)=> {
             console.log("BOOL: ", bool);
@@ -156,7 +202,6 @@ app.post("/login", (req,res) => {
                 error: "Something went wrong. Please try again"
                 })
             } 
-            req.session.userid = userid;
             console.log("req.session in POST login", req.session)
             db.getSignature(userid)
             .then((result) => {
@@ -187,10 +232,14 @@ app.post("/login", (req,res) => {
 
 
 
+
 app.post("/petition", (req,res) => {
-    db.insertUserSignature(req.session.firstname, req.session.lastname, req.body.hiddenFieldforUrl, req.session.userid) 
+    console.log("__________________________________")
+    console.log("PETITION : ", req.body)
+    db.insertUserSignature(req.body.hiddenFieldforUrl, req.session.userid) 
     .then((result) => {
-        console.log("Returning result.rows[0].id in POST:", result.rows[0].id)
+        //returns id of signature
+        console.log("Returning signature id in POST:", result.rows)
         req.session.sigId = result.rows[0].id;
         res.redirect("/petition/thanks");
     })
@@ -199,7 +248,7 @@ app.post("/petition", (req,res) => {
             layout:"main",
             error:"Sorry something went wrong. Please try again!"
         });
-        console.log("error in POST/petition : insertUserInput: ", err)
+        console.log("error in POST/petition : insertUserSignature: ", err)
      });
 
 })

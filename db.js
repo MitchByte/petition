@@ -12,9 +12,9 @@ module.exports.userLogin = (mail) => {
     return db.query(`SELECT * FROM users WHERE email = '${mail}'`)
 }
 
-module.exports.insertUserSignature = (first, last, sign, userid) => {
-    return db.query(`INSERT INTO signatures (firstname, lastname, signa, userid) VALUES ($1, $2, $3, $4) RETURNING id`,
-                    [first, last, sign, userid])
+module.exports.insertUserSignature = (sign, userid) => {
+    return db.query(`INSERT INTO signatures (signa, userid) VALUES ($1, $2) RETURNING id`,
+                    [sign, userid])
                 }
 
 
@@ -28,5 +28,10 @@ module.exports.getSigners = () => {
 }
 
 module.exports.getSignature = (identifier)  => {
-    return db.query(`SELECT signa FROM signatures WHERE id = ${identifier}`)
+    return db.query(`SELECT signa FROM signatures WHERE userid = ${identifier}`)
+}
+
+module.exports.addProfile = (userid,age,city,homepage) => {
+    return db.query(`INSERT INTO profiles (userid,age,city,homepage) VALUES ($1, $2, $3, $4)`,
+    [userid,age,city,homepage])
 }
