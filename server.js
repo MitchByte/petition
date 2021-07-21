@@ -4,8 +4,16 @@ const db = require("./db");
 const hb = require("express-handlebars");
 const cookieSession = require('cookie-session');
 const bcrypt = require("./bcrypt")
- const csurf = require('csurf');
+const csurf = require('csurf');
 
+if (process.env.NODE_ENV == 'production') {
+    app.use((req, res, next) => {
+        if (req.headers['x-forwarded-proto'].startsWith('https')) {
+            return next();
+        }
+        res.redirect(`https://${req.hostname}${req.url}`);
+    });
+};
 
 
 app.engine("handlebars", hb());
@@ -59,12 +67,20 @@ app.get("/update", (req,res) => {
     let userid = req.session.userid;
     db.getUpdate(userid)
     .then((result) => {
-        console.log("reslut get update: ", result.rows)
-        let update = result.rows[0];
+        console.log("result get update: ", result.rows)
+        let update = result.rows;
         res.render("update", {
             layout:"main",
             update
         })
+    })
+    .catch((err) => {
+        console.log("error in GET/update", err);
+        res.render("update", {
+                layout:"main",
+                error: "Something went wrong. Please try again",
+            })
+
     })
 
 })
@@ -91,25 +107,6 @@ app.get("/profile", (req,res) => {
     })
 });
 
-app.get("/petition/signers/:city", (req,res) => {
-    console.log("request to /signers/city worked")
-    console.log("SIGNERS BY CITY")
-    console.log("req parameter", req.params)
-    let city = req.params.city;
-    db.getSignersByCity(city)
-    .then((result) => {
-        let capitalCity =  city.charAt(0).toUpperCase() + city.slice(1);
-        console.log("get singners by city",result.rows);
-        let signersbycity = result.rows;
-         res.render("signersbycity",{
-             layout:"main",
-             city: capitalCity,
-             signersbycity
-        })
-    })
-
-   
-})
 
 app.get("/petition/thanks", (req,res) => {
     console.log("__________________________________")
@@ -178,6 +175,25 @@ app.get("/logout", (req,res) => {
     res.redirect("/register");
 });
 
+app.get("/petition/signers/:city", (req,res) => {
+    console.log("request to /signers/city worked")
+    console.log("SIGNERS BY CITY")
+    console.log("req parameter", req.params)
+    let city = req.params.city;
+    db.getSignersByCity(city)
+    .then((result) => {
+        let capitalCity =  city.charAt(0).toUpperCase() + city.slice(1);
+        console.log("get singners by city",result.rows);
+        let signersbycity = result.rows;
+         res.render("signersbycity",{
+             layout:"main",
+             city: capitalCity,
+             signersbycity
+        })
+    })
+
+   
+})
 
 
 //POST 
@@ -307,7 +323,63 @@ app.post("/login", (req,res) => {
 
     })
 
+});
+
+app.post("/update", (req,res)=> {
+    let {firstname,lastname,email,password,age,city,homepage} = req.body;
+    if (!homepage.startsWith("https://") || !homepage.startsWith("http://")) {
+            res.render("profile", {
+                layout:"main",
+                error: "Please use a valid URL"
+            })
+    };
+    hompage = homepage || null;
+    age = age || null;
+    let lowerCity = city.toLowerCase();
+    lowerCity = lowerCity || null;
+
+    let userid = req.session.userid;
+
+    bcrypt.hash(password)
+    .then((hashedpw) => {
+        db.addUpdateUsers(userid,firstname,lastname,email,hashedpw)
+        .then(()=> {
+            db.addUpdateProfiles(age,lowerCity,homepage)
+            .then(()=> {
+                res.redirect("/update");
+
+            })
+            .catch((err)=> {
+                res.render("update", {
+                layout:"main",
+                error:"something went wrong"
+                });
+                console.log("error in addupdateprofiles",err)
+            })
+
+        })
+        .catch((err) => {
+            res.render("update", {
+            layout:"main",
+            error:"something went wrong"
+            });
+            console.log("error in POST/update in addUpdateUsers", err)
+        })
+    })        
+    .catch((err) => {
+        res.render("update", {
+            layout:"main",
+            error:"something went wrong"
+        });
+        console.log("error in POST/update hash", err)
+    })
+
+
+
+
+
 })
+
 
 
 

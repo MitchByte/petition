@@ -47,5 +47,14 @@ module.exports.getSignersByCity = (city) => {
 }
 
 module.exports.getUpdate = (userid) => {
-    return db.query(`SELECT users.* FROM users JOIN profiles ON users.id = profiles.userid WHERE profiles.userid = ${userid}`)
+    return db.query(`SELECT users.*,profiles.* FROM users JOIN profiles ON users.id = profiles.userid WHERE profiles.userid = ${userid}`)
+}
+
+module.exports.addUpdateUsers = (userid,firstname,lastname,email,hashedpw) => {
+    return db.query(`UPDATE users SET firstname = '$1',lastname = '$2', email = '$3',hashedpassword='$4' WHERE id = ${userid}`,
+    [firstname,lastname,email,hashedpw])
+}
+module.exports.addUpdateProfiles = (userid,age,lowerCity,homepage) => {
+    return db.query(` INSERT INTO profiles (userid, age, city, homepage) VALUES (${userid},$2,$3,$4) ON CONFLICT (userid) DO UPDATE SET age = $2, city = '$3', homepage = '$4`,
+    [age,lowerCity,homepage])
 }
