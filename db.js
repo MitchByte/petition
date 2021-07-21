@@ -1,7 +1,7 @@
 const spicedPg = require("spiced-pg");
-//const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition") //returns an object
 const db = spicedPg(process.env.DATABASE_URL || "postgres:postgres:postgres@localhost:5432/petition");
-//register user, get back id
+
+
 module.exports.userRegister = (first, last, email, hashedpw) => {
     return db.query(`INSERT INTO users (firstname, lastname, email, hashedpassword) VALUES ($1, $2, $3, $4) RETURNING id`,
     [first, last, email, hashedpw])
@@ -50,11 +50,22 @@ module.exports.getUpdate = (userid) => {
     return db.query(`SELECT users.*,profiles.* FROM users JOIN profiles ON users.id = profiles.userid WHERE profiles.userid = ${userid}`)
 }
 
-module.exports.addUpdateUsers = (userid,firstname,lastname,email,hashedpw) => {
-    return db.query(`UPDATE users SET firstname = '$1',lastname = '$2', email = '$3',hashedpassword='$4' WHERE id = ${userid}`,
-    [firstname,lastname,email,hashedpw])
+module.exports.addUpdateUsersPw = (userid,firstname,lastname,email,hashedpw) => {
+    return db.query(`UPDATE users SET firstname = $2 ,lastname = $3 , email = $4, hashedpassword = $5 WHERE id = $1`,
+    [userid,firstname,lastname,email,hashedpw])
 }
+
+module.exports.addUpdateUsers = (userid,firstname,lastname,email) => {
+    return db.query(`UPDATE users SET firstname = $2 ,lastname = $3 , email = $4  WHERE id = $1`,
+    [userid,firstname,lastname,email])
+
+}
+
 module.exports.addUpdateProfiles = (userid,age,lowerCity,homepage) => {
-    return db.query(` INSERT INTO profiles (userid, age, city, homepage) VALUES (${userid},$2,$3,$4) ON CONFLICT (userid) DO UPDATE SET age = $2, city = '$3', homepage = '$4`,
-    [age,lowerCity,homepage])
+    return db.query(` INSERT INTO profiles (userid, age, city, homepage) VALUES ($1,$2,$3,$4) ON CONFLICT (userid) DO UPDATE SET age = $2, city = $3, homepage = $4 `,
+    [userid,age,lowerCity,homepage])
+}
+
+module.exports.deleteSign = (userid) => {
+    return db.query(`DELETE FROM signatures WHERE userid = ${userid}`)
 }
