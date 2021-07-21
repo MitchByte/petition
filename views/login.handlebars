@@ -6,6 +6,7 @@
         <label for="password">Password</label>
         <input type="password" name="password" id="password" autocomplete="off">
 
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <button type="submit">Login!</button>
     </form>
     <!-- render failed login-->{{error}}

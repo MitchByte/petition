@@ -11,6 +11,8 @@
 
         <label for="password">Password</label>
         <input type="password" name="password" id="password" autocomplete="off">
+        
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
         <button type="submit">Sign up!</button>
     </form>

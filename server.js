@@ -4,6 +4,8 @@ const db = require("./db");
 const hb = require("express-handlebars");
 const cookieSession = require('cookie-session');
 const bcrypt = require("./bcrypt")
+ const csurf = require('csurf');
+
 
 
 app.engine("handlebars", hb());
@@ -15,6 +17,12 @@ app.use(cookieSession({
     secret: `set second cookie`,
     maxAge: 1000 * 60 * 60 * 24 * 14
 }));
+app.use(csurf());
+app.use(function(req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+}); 
+
 app.use(express.static("./public"));
 
 
@@ -25,7 +33,7 @@ app.get("/", (req,res) => {
 
 app.get("/register", (req,res) => {
     if(req.session.userid) {
-        return res.redirect("/petition");
+        return res.redirect("/profile");
     }
     res.render("register", {
         layout:"main",
@@ -35,14 +43,38 @@ app.get("/register", (req,res) => {
 app.get("/login", (req,res) => {
     console.log("req session in GET login",req.session);
     if(req.session.userid) {
-        return res.redirect("/petition");
+        return res.redirect("/profile");
     }
     res.render("login", {
         layout:"main"
     })
 })
 
+app.get("/update", (req,res) => {
+    console.log("IN GET/UPDATE");
+    console.log("(!req.session.userid",!req.session.userid );
+    if(!req.session.userid) {
+        return res.redirect("/register");
+    }
+    let userid = req.session.userid;
+    db.getUpdate(userid)
+    .then((result) => {
+        console.log("reslut get update: ", result.rows)
+        let update = result.rows[0];
+        res.render("update", {
+            layout:"main",
+            update
+        })
+    })
+
+})
+
+
+
 app.get("/petition", (req,res) => {
+   if(req.session.sigId) {
+        return res.redirect("/petition/thanks");
+    }
     console.log("req session userid in petition: ",req.session.userid)
     res.render("petition", {
         layout:"main",
@@ -50,12 +82,14 @@ app.get("/petition", (req,res) => {
 });
 
 app.get("/profile", (req,res) => {
+    console.log("IN GET/PROFILE")
+    if(!req.session.userid) {
+        return res.redirect("/register");
+    }
     res.render("profile", {
         layout:"main",
     })
 });
-
-//WORK TO DO HERE
 
 app.get("/petition/signers/:city", (req,res) => {
     console.log("request to /signers/city worked")
@@ -77,7 +111,6 @@ app.get("/petition/signers/:city", (req,res) => {
    
 })
 
-//dont know where the problem, get right signature id!!
 app.get("/petition/thanks", (req,res) => {
     console.log("__________________________________")
     console.log("THANKS : ", req.body)
@@ -302,6 +335,6 @@ app.post("/petition", (req,res) => {
 
 
 //LISTEN
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log("  SERVER IS LISTENING  ")
 } )

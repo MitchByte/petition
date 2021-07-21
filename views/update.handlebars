@@ -1,0 +1,34 @@
+<div class="update">
+    <form method="post">
+         <label for="firstname">First Name</label>
+        <input type="text" name="firstname" id="firstname" autocomplete="off" value="{{firstname}}">
+
+        <label for="lastname">Last Name</label>
+        <input type="text" name="lastname" id="lastname" autocomplete="off" value="{{lastname}}">
+
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" autocomplete="off" value="{{email}}">
+
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" autocomplete="off" value="Password">
+
+        <label for="age">Age</label>
+        <input type="number" name="age" id="age" min="18" max="150" value="{{age}}">
+
+        <label for="city">City</label>
+        <input type="text" name="city" id="city" value="{{city}}">
+
+        <label for="homepage">Homepage</label>
+        <input type="url" name="homepage" id="homepage" value="{{Homepage}}">
+
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+
+        <button type="submit">Update</button>
+    </form>
+    <div class="error">
+        {{error}}
+    </div>
+    
+    
+</div>

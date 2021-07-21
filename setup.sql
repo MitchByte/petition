@@ -23,4 +23,4 @@ CREATE TABLE profiles (
     age INT,
     city VARCHAR,
     homepage VARCHAR
-)
+);

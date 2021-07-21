@@ -1,6 +1,6 @@
 const spicedPg = require("spiced-pg");
-const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition") //returns an object
-
+//const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition") //returns an object
+const db = spicedPg(process.env.DATABASE_URL || "postgres:postgres:postgres@localhost:5432/petition");
 //register user, get back id
 module.exports.userRegister = (first, last, email, hashedpw) => {
     return db.query(`INSERT INTO users (firstname, lastname, email, hashedpassword) VALUES ($1, $2, $3, $4) RETURNING id`,
@@ -44,4 +44,8 @@ module.exports.getSignersByCity = (city) => {
     FROM users
     FULL JOIN profiles ON users.id = profiles.userid
     WHERE profiles.city = '${city}'`)
+}
+
+module.exports.getUpdate = (userid) => {
+    return db.query(`SELECT users.* FROM users JOIN profiles ON users.id = profiles.userid WHERE profiles.userid = ${userid}`)
 }
