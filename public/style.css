@@ -1,11 +1,146 @@
 * {
-    margin: 0
-}
-
-body {
-    background-color: magenta;
+    margin: 0;
+    display: grid;
 }
 
 #canvas {
     border: dashed;
+}
+
+header {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    background-color: rgb(88, 250, 207);
+    height: 65px;
+    font-family: 'Bebas Neue', cursive;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+header h1 {
+    padding-top: 7px;
+    font-size: 60px;
+}
+
+#menu {
+    height: 45px;
+    width: 45px;
+    padding-top: 20px;
+}
+#bar{
+    height: 7px;
+    width: 45px;
+    background-color: #918e8e;
+    
+    
+}
+
+.photo-container {
+    display: flex;
+    flex-wrap: nowrap;
+    background-image: url("./assets/graffiti.jpg");
+    justify-content: center;
+    object-fit: cover;
+}
+.templates {
+    background-color: rgb(34 33 33 / 90%);
+    font-family: 'Roboto', sans-serif;
+    padding-left:80px;
+    padding-right: 80px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    margin:20px;
+    color: whitesmoke;
+}
+
+button {
+    padding: 10px 24px;
+    background-color: #fff99f;
+    border: none;
+    color: black;
+    border-radius: 12px;
+    margin-top:10px;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #cac57a;
+    color: white;
+}
+.input {
+    margin-bottom:25px;
+    border: 1px solid rgb(88, 250, 207);
+    background-color: #8ef8d1;
+    color:black;
+}
+input {
+    border:none;
+}
+
+a {
+    color:white;
+}
+.login {
+    padding:40px;
+    width:400px;
+}
+.error {
+    padding:20px;
+}
+.register {
+    padding:40px;
+    width:400px;
+}
+footer {
+    background-color: #918e8e;
+    color: whitesmoke;
+    padding: 10 10;
+    text-align: center;
+}
+
+#menu-left {
+    height: 100%;
+    background-color: white;
+    position:fixed;
+    top: 0;
+    bottom:0;
+    left:80%;
+    font-weight: 600;
+    right: 0%;
+}
+#overlay {
+    background-color: rgba(46,49,49,0.5);
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+}
+#x {
+    padding: 20px;
+    padding-left: 90%;
+    font-size: 25px;
+    font-family: sans-serif;
+
+}
+.links {
+    padding:20px;
+    font-size: 20px;
+}
+.logout {
+    padding:20px;
+    font-size: 15px;
+}
+.hidden {
+    visibility: hidden;
+}
+
+.on {
+    transition-property: transform;
+    transition-duration: 10s;
+    visibility: visible;
+}
+main {
+    position: relative;
 }

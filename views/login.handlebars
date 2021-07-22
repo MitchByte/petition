@@ -1,16 +1,24 @@
  <div class ="login">
     <form method="post">
-        <label for="email">Email</label>
-        <input type="text" name="email" id="email" >
-
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" autocomplete="off">
-
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <button type="submit">Login!</button>
+        <div class="input">
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email" >
+        </div>
+        
+        <div class="input">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" autocomplete="off">  
+        </div>
+        
+        <div class="inputbutton-login">
+            <button type="submit">Login!</button>
+        </div>
+        <!--<input type="hidden" name="_csrf" value="{{csrfToken}}">-->
+        
     </form>
-    <!-- render failed login-->{{error}}
-   <a href='register'>go back to register</a>
+    <div class="register-link">
+        <a href='register'>go back to register</a>
+    </div>
 
    <div class="error">
         {{error}}

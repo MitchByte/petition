@@ -3,17 +3,50 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="/style.css"> <!-- maybe set a / -->
         <title>Creative City</title>
     </head>
     <body>
         <header>
-           <a href="http://localhost:8080/logout">Logout</a>
+            <h1>Petition for a Creative City</h1>
+            <div id="menu">
+                <div id="bar"></div>
+                <div id="bar"></div>
+                <div id="bar"></div>
+            </div>
+            <!--<img id="menu" src="./assets/hamburgermenu.svg" alt="menu" />-->
 
         </header>
+        <div class="photo-container">
+            <div class="templates">
+                {{{body}}}
+            </div>
+             
+        </div>
 
-        {{{body}}}
-
-        <footer></footer>
+        <footer>&copy; 2021 Michèle Fischer</footer>
+        
+        <div id="overlay" class="hidden"></div>
+        <div id="menu-left" class="hidden">
+            <p id="x">X</p>
+            <div class="links">
+                <a href="update">Update</a>
+            </div>
+            <div class="links">
+                <a href="petition">Sign Petition</a>
+            </div>
+            <div class="links">
+                <a href="signers">Signers</a>
+            </div>
+            <div class="links">
+                <a href="logout">Logout</a>
+            </div>
+            <div class="delete">
+                <a href="delete">Delete</a>
+            </div>
+        </div>
     </body>
 </html>

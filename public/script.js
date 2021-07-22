@@ -1,6 +1,5 @@
 (function() {
-        console.log("script.js is working");
-    //id = canvas
+    console.log("script.js is working");
     var canvas = $('#canvas');
     var ctx = document.getElementById('canvas').getContext('2d');
     var url = $("#hiddenFieldforUrl");
@@ -13,8 +12,8 @@
     var offsetY = canvasOffset.top;
 
     function setPosition(e) {
-        pos.x= parseInt(e.clientX-offsetX);
-        pos.y = parseInt(e.clientY-offsetY);
+        pos.x= parseInt(e.pageX-offsetX);
+        pos.y = parseInt(e.pageY-offsetY);
     }
 
     canvas.on('mousedown', setPosition);
@@ -37,6 +36,27 @@
         //console.log("url",url.val())
         
     });
+
+
+    var x = $('#x');
+    var nav = $('#menu-left');
+    var over = $('#overlay');
+    var menu = $('#menu');
+    menu.on('click', () => {
+        console.log("MENU CLICKED");
+        nav.classList.add('on');
+        over.classList.add('on');
+    });
+
+    x.on('click', function() { 
+        nav.classList.remove('on');
+        over.classList.remove('on');
+    });
+
+    over.on('click', function() {
+        nav.classList.remove('on');
+        over.classList.remove('on');
+    })
     
 
 })();
