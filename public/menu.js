@@ -5,6 +5,9 @@
             "visibility":"visible",
             "transition-property": "transform",
             "transition-duration": "10s"
+        });
+        $('#menu').css({
+            "visibility":"hidden"
         })
     });
     
