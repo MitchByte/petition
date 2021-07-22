@@ -1,19 +1,40 @@
-<div>
+<div class="templates">
     <p>All this people support the idea of creative public space!</p>
-    <ul>
+    <div>
+        <ul class="signers-list">
         {{#signers}}
-            <li>{{firstname}}  
-                {{lastname}}
-                [{{#if age}} {{age}} {{/if}} 
-                {{#if city}} <a href="signers/{{city}}">  {{city}} </a> {{/if}}
-                {{#if homepage}} <a href="{{homepage}}">  {{homepage}}</a> {{/if}}]
+            <li class="list">{{firstname}} {{lastname}} [
+                {{#if age}} {{ age }} {{/if}} / 
+                {{#if city}} <a href="signers/{{city}}">  {{ city }} </a> {{/if}} / 
+                {{#if homepage}} <a href="{{homepage}}">  {{ homepage }}</a> {{/if}}]
             </li>
         {{/signers}}
-    </ul>
+        </ul>
+    </div>
+    
     <div class="error">
         {{error}}
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="/script.js"></script>
 </div>
-   
+<div id="menu">
+    <div id="bar"></div>
+    <div id="bar"></div>
+    <div id="bar"></div>    
+</div>
+<div id="menu-left" class="hidden">
+    <p id="x">X</p>
+
+    <div class="links">
+        <a href="../update">Update Profile</a>
+    </div>
+    <div class="links">
+        <a href="thanks">Unsign Petition</a>
+    </div>
+    <div class="links">
+        <a href="../logout">Logout</a>
+    </div>
+    <div class="delete">
+        <a href="../delete">Delete</a>
+    </div>
+</div>
+

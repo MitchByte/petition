@@ -1,33 +1,48 @@
-<div>
-    <h1>Open Spaces for creative minds</h1>
-    <p>Looking for an open space where you can connect and learn something new?</p><br>
-    <p>As an artist I often find myself home alone drawing, not interacting with other people and all by my one. But actually I want to 
-        share my knowledge. 
-        Also I'm interested in learning new ways to express myself . The idea is a place for meeting people of 
-        different kind of interests, there they can connect and create something new. 
-        So this petition is about to evolve this idea as a legal public space on places the city usually doesn't use anymore. </p>
+<div class="templates">
+    <div class="petition-text">
+        <h1>Open Space for creative minds</h1>
+        <p>Looking for an open space to connect and learn something new?</p><br>
+        <p>As an artist I often find myself home alone drawing, not interacting with other people and all by my one. But actually I want to meet people and
+            share my knowledge.
+            Also I'm interested in learning new ways to express myself and art forms. So here is my vision: the idea of creating a place in a physical way for meeting people of 
+            different kind of interests, there they can visit, connect and create something new. 
+            But also the city has a lot of empty unused spaces.
+            This petition is about to evolve this idea as a legal public space on places the city usually doesn't use anymore. </p><br>
 
-    <p>So please sign up, if you want to support this idea!</p>
+        <p>So please sign up, if you want to support this idea!</p>
+    </div>
+    
+    <div class="canvasform">
+        <form method="post">
+            <input type="hidden" name="hiddenFieldforUrl" id="hiddenFieldforUrl">
 
-    <form method="post">
-        <!--
-        <label for="firstname">First Name</label>
-        <input type="text" name="firstname" id="firstname" autocomplete="off">
+            <canvas id="canvas" width="500" height="150"></canvas>
+            <!--<input type="hidden" name="_csrf" value="{{csrfToken}}">-->
 
-        <label for="lastname">Last Name</label>
-        <input type="text" name="lastname" id="lastname" autocomplete="off">
-    -->
-        <input type="hidden" name="hiddenFieldforUrl" id="hiddenFieldforUrl">
-
-        <canvas id="canvas" width="400" height="100"></canvas>
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-
-        <button type="submit">Submit!</button>
-        
-    </form>
+            <button type="submit">Sign Petition!</button>
+        </form>
+    </div>
+    
     <div class="error">
         {{error}}
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="/script.js"></script>
 </div>
+<div id="menu">
+    <div id="bar"></div>
+    <div id="bar"></div>
+    <div id="bar"></div>    
+</div>
+<div id="menu-left" class="hidden">
+    <p id="x">X</p>
+
+    <div class="links">
+        <a href="../update">Update Profile</a>
+    </div>
+    <div class="links">
+        <a href="../logout">Logout</a>
+    </div>
+    <div class="delete">
+        <a href="../delete">Delete</a>
+    </div>
+</div>
+<script src="script.js"></script>

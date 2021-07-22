@@ -1,21 +1,45 @@
-<div class="profile">
-    <form method="post">
-        <label for="age">Age</label>
-        <input type="number" name="age" id="age" min="18" max="150">
-
-        <label for="city">City</label>
-        <input type="text" name="city" id="city">
-
-        <label for="homepage">Homepage</label>
-        <input type="url" name="homepage" id="homepage">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-
-
-        <button type="submit">Continue</button>
-    </form>
+<div class="templates">
+    <div class="form">
+        <form method="post">
+            <div class="input">
+                <label for="age">Age</label>
+                <input type="number" name="age" id="age" min="18" max="150">
+            </div>
+        
+            <div class="input">
+                <label for="city">City</label>
+                <input type="text" name="city" id="city">
+            </div>
+            <div class="input">
+                <label for="homepage">Homepage</label>
+                <input type="url" name="homepage" id="homepage">
+            </div>
+            <!--<input type="hidden" name="_csrf" value="{{csrfToken}}">-->
+            <div class="inputbutton-profile">
+                <button type="submit">Continue</button>
+            </div>
+        </form>
+    </div>
+    
     <div class="error">
         {{error}}
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="/script.js"></script>
+</div>
+
+<div id="menu">
+    <div id="bar"></div>
+    <div id="bar"></div>
+    <div id="bar"></div>    
+</div>
+<div id="menu-left" class="hidden">
+    <p id="x">X</p>
+    <div class="links">
+        <a href="petition">Petition</a>
+    </div>
+    <div class="links">
+        <a href="logout">Logout</a>
+    </div>
+    <div class="delete">
+        <a href="delete">Delete</a>
+    </div>
 </div>

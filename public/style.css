@@ -2,6 +2,9 @@
     margin: 0;
     display: grid;
 }
+body {
+    height: 100%;
+}
 
 #canvas {
     border: dashed;
@@ -25,26 +28,31 @@ header h1 {
 }
 
 #menu {
+    background-color: white;
     height: 45px;
     width: 45px;
-    padding-top: 20px;
+    padding: 20px;
+    align-items: center;
+    margin-left:20%;
 }
 #bar{
     height: 7px;
     width: 45px;
     background-color: #918e8e;
-    
-    
+    border-radius: 2px; 
 }
 
 .photo-container {
+    position: relative;
     display: flex;
     flex-wrap: nowrap;
     background-image: url("./assets/graffiti.jpg");
-    justify-content: center;
+    justify-content: flex-end;
     object-fit: cover;
 }
 .templates {
+    flex-grow: 1;
+    margin-left:250px;
     background-color: rgb(34 33 33 / 90%);
     font-family: 'Roboto', sans-serif;
     padding-left:80px;
@@ -57,16 +65,21 @@ header h1 {
 
 button {
     padding: 10px 24px;
-    background-color: #fff99f;
+    background-color: #FCEDB7;
     border: none;
     color: black;
     border-radius: 12px;
-    margin-top:10px;
+    margin-top:40px;
     margin-bottom: 20px;
+    transition-duration: 0.4s;
+    font-size: 16px;
+    margin-left: 30%;
+    margin-right: 30%;
+
 }
 
 button:hover {
-    background-color: #cac57a;
+    background-color: #EFCC33;
     color: white;
 }
 .input {
@@ -82,6 +95,14 @@ input {
 a {
     color:white;
 }
+.canvasform {
+    margin-top:40px;
+}
+canvas {
+    margin-left: 15%;
+}
+
+
 .login {
     padding:40px;
     width:400px;
@@ -93,54 +114,64 @@ a {
     padding:40px;
     width:400px;
 }
-footer {
-    background-color: #918e8e;
-    color: whitesmoke;
-    padding: 10 10;
-    text-align: center;
+.thanks-signature {
+    padding:5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 1px solid white;
+}
+.list {
+    display: flex;
+    flex-wrap: nowrap;
+    margin:5px;
 }
 
-#menu-left {
-    height: 100%;
-    background-color: white;
-    position:fixed;
-    top: 0;
-    bottom:0;
-    left:80%;
-    font-weight: 600;
-    right: 0%;
-}
-#overlay {
-    background-color: rgba(46,49,49,0.5);
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top: 0;
-}
-#x {
-    padding: 20px;
-    padding-left: 90%;
-    font-size: 25px;
-    font-family: sans-serif;
 
-}
 .links {
     padding:20px;
     font-size: 20px;
 }
-.logout {
+.delete {
     padding:20px;
     font-size: 15px;
 }
-.hidden {
-    visibility: hidden;
+
+
+.signers-list {
+    display: flex;
+    flex-direction: column;
+    margin-top:20px;
 }
 
-.on {
-    transition-property: transform;
-    transition-duration: 10s;
-    visibility: visible;
+
+footer {
+font-family: 'Roboto', sans-serif;
+    background-color: #918e8e;
+    color: whitesmoke;
+    padding: 10 10;
+    text-align: center;
+    bottom: 0;
 }
-main {
-    position: relative;
+
+#menu-left {
+    height: 60%;
+    background-color: rgb(88, 250, 207);
+    position:fixed;
+    width: 200px;
+    font-family: 'Roboto', sans-serif;
+}
+#x {
+    padding-top: 10px;
+    padding-left: 80%;
+    font-size: 35px;
+}
+
+#menu-left a {
+    text-decoration: none;
+}
+#menu-left a:hover {
+    color:black;
+}
+.hidden {
+    visibility: hidden;
 }

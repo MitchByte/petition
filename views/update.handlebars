@@ -1,37 +1,65 @@
-<div class="update">
+<div class="templates">
+
     <form method="post">
         {{#update}}
-         <label for="firstname">First Name</label>
-        <input type="text" name="firstname" id="firstname" autocomplete="off" value="{{firstname}}">
-
-        <label for="lastname">Last Name</label>
-        <input type="text" name="lastname" id="lastname" autocomplete="off" value="{{lastname}}">
-
-        <label for="email">Email</label>
-        <input type="text" name="email" id="email" autocomplete="off" value="{{email}}">
-
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" autocomplete="off" >
-
-        <label for="age">Age</label>
-        <input type="number" name="age" id="age" min="18" max="150" value="{{age}}">
-
-        <label for="city">City</label>
-        <input type="text" name="city" id="city" value="{{city}}">
-
-        <label for="homepage">Homepage</label>
-        <input type="url" name="homepage" id="homepage" value="{{Homepage}}">
+        <div class="input">
+            <label for="firstname">First Name</label>
+            <input type="text" name="firstname" id="firstname" autocomplete="off" value="{{firstname}}">
+        </div>
+        <div class="input">
+           <label for="lastname">Last Name</label>
+            <input type="text" name="lastname" id="lastname" autocomplete="off" value="{{lastname}}"> 
+        </div>
+        <div class="input">
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email" autocomplete="off" value="{{email}}">
+        </div>
+        <div class="input">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" autocomplete="off" >
+        </div>
+        <div class="input">
+            <label for="age">Age</label>
+            <input type="number" name="age" id="age" min="18" max="150" value="{{age}}">
+        </div>
+        <div class="input">
+            <label for="city">City</label>
+            <input type="text" name="city" id="city" value="{{city}}">
+        </div>
+        <div class="input">
+            <label for="homepage">Homepage</label>
+            <input type="url" name="homepage" id="homepage" value="{{Homepage}}">
+        </div>
 
         <!--<input type="hidden" name="_csrf" value="<%= csrfToken %>">-->
-
-
-        <button type="submit">Update</button>
+        <div class="inputbotton-update">
+            <button type="submit">Update</button>
+        </div>
+         {{/update}}
     </form>
-    {{/update}}
+   
     <div class="error">
         {{error}}
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="/script.js"></script>
+</div>
+<div id="menu">
+    <div id="bar"></div>
+    <div id="bar"></div>
+    <div id="bar"></div>    
+</div>
+<div id="menu-left" class="hidden">
+    <p id="x">X</p>
+
+    <div class="links">
+        <a href="update">Update Profile</a>
+    </div>
+    <div class="links">
+        <a href="petition">Petition</a>
+    </div>
+    <div class="links">
+        <a href="logout">Logout</a>
+    </div>
+    <div class="delete">
+        <a href="delete">Delete</a>
+    </div>
 </div>
