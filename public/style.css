@@ -5,6 +5,9 @@
 body {
     height: 100%;
 }
+main {
+    height: 100vh;
+}
 
 #canvas {
     border: dashed;
@@ -40,6 +43,9 @@ header h1 {
     width: 45px;
     background-color: #918e8e;
     border-radius: 2px; 
+}
+#register {
+    padding-bottom: 10px;
 }
 
 .photo-container {
@@ -142,7 +148,39 @@ canvas {
     flex-direction: column;
     margin-top:20px;
 }
+.login-button {
+    height: 36px;
+    padding: 10px 24px;
+    background-color: #FCEDB7;
+    border: none;
+    color: black;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+    font-size: 16px;
 
+}
+.delete-button {
+    height: 36px;
+    padding: 10px 24px;
+    background-color: #FCEDB7;
+    border: none;
+    color: black;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+    font-size: 16px;
+
+}
+.unsign-button {
+    height: 36px;
+    padding: 10px 24px;
+    background-color: #FCEDB7;
+    border: none;
+    color: black;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+    font-size: 16px;
+
+}
 
 footer {
 font-family: 'Roboto', sans-serif;
@@ -154,6 +192,7 @@ font-family: 'Roboto', sans-serif;
 }
 
 #menu-left {
+    top:65px;
     height: 60%;
     background-color: rgb(88, 250, 207);
     position:fixed;

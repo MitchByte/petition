@@ -4,8 +4,8 @@
         <ul class="signers-list">
         {{#signers}}
             <li class="list">{{firstname}} {{lastname}} [
-                {{#if age}} {{ age }} {{/if}} / 
-                {{#if city}} <a href="signers/{{city}}">  {{ city }} </a> {{/if}} / 
+                {{#if age}} {{ age }} {{/if}} |
+                {{#if city}} <a href="signers/{{city}}">  {{ city }} </a> {{/if}} |
                 {{#if homepage}} <a href="{{homepage}}">  {{ homepage }}</a> {{/if}}]
             </li>
         {{/signers}}

@@ -7,7 +7,6 @@ module.exports.userRegister = (first, last, email, hashedpw) => {
     [first, last, email, hashedpw])
 }
 
-//SELECT to find all the data for a user in the users table by their email address.
 module.exports.userLogin = (mail) => {
     return db.query(`SELECT * FROM users WHERE email = '${mail}'`)
 }
@@ -68,4 +67,11 @@ module.exports.addUpdateProfiles = (userid,age,lowerCity,homepage) => {
 
 module.exports.deleteSign = (userid) => {
     return db.query(`DELETE FROM signatures WHERE userid = ${userid}`)
+}
+
+module.exports.deleteUser = (userid) => {
+    return db.query(`DELETE FROM users WHERE id = ${userid}`)
+}
+module.exports.deleteProfile = (userid) => {
+    return db.query(`DELETE FROM profiles WHERE userid = ${userid}`)
 }
